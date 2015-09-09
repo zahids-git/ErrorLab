@@ -1,5 +1,6 @@
 package com.errorlab.activity;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -9,7 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
-import com.errorlab.Fragements.Dashbord;
+import com.errorlab.Fragements.EventPage;
+import com.errorlab.Fragements.PostView;
 import com.errorlab.R;
 
 public class MainActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener{
@@ -30,24 +32,30 @@ public class MainActivity extends AppCompatActivity implements FragmentDrawer.Fr
         try{
             drawerFragment = (FragmentDrawer) getSupportFragmentManager().findFragmentById(R.id.navigateDrawer);
             drawerFragment.setUp(R.id.navigateDrawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
-            //drawerFragment.setDrawerListener(this);
+            drawerFragment.setDrawerListener(this);
         }
         catch (Exception e){
             Log.e("Check",e.getMessage().toString());
         }
     }
 
-    public void changeFragment(View view){
+    public void changeFragment(Fragment fragment){
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        Dashbord dashbord = new Dashbord();
-        fragmentTransaction.replace(R.id.mainWindow, dashbord);
+        fragmentTransaction.replace(R.id.mainWindow, fragment);
         fragmentTransaction.commit();
     }
 
     @Override
     public void onDrawerItemSelected(View view, int position) {
+
+        if(position==0){
+            Fragment fragment = new PostView();
+            changeFragment(fragment);
+        }
+        else if(position==1) changeFragment(new EventPage());
+
 
     }
 

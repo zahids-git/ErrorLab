@@ -29,41 +29,16 @@ import java.util.List;
  */
 public class FragmentDrawer extends Fragment{
 
-    private static String TAG = FragmentDrawer.class.getSimpleName();
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-    private NavigationDrawerAdapter adapter;
     private View containerView;
     private static String[] titles = null;
     private FragmentDrawerListener drawerListener;
-    private TextView textView;
 
     private ListView listView;
 
-    public FragmentDrawer() {
-
-    }
-
     public void setDrawerListener(FragmentDrawerListener listener) {
         this.drawerListener = listener;
-    }
-
-    public static List<NavDrawerItem> getData() {
-        List<NavDrawerItem> data = new ArrayList<>();
-        for (int i = 0; i < titles.length; i++) {
-            NavDrawerItem navItem = new NavDrawerItem();
-            navItem.setTitle(titles[i]);
-            data.add(navItem);
-        }
-        return data;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // drawer labels
-        /*titles = getActivity().getResources().getStringArray(R.array.nav_drawer_labels);*/
     }
 
     @Override
@@ -89,8 +64,6 @@ public class FragmentDrawer extends Fragment{
                 mDrawerLayout.closeDrawer(containerView);
             }
         });
-
-        //adapter = new NavigationDrawerAdapter(getActivity(), getData());
         return layout;
     }
 
@@ -127,62 +100,8 @@ public class FragmentDrawer extends Fragment{
 
     }
 
-    public static interface ClickListener {
-        public void onClick(View view, int position);
-
-        public void onLongClick(View view, int position);
-    }
-
-    static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
-
-        private GestureDetector gestureDetector;
-        private ClickListener clickListener;
-
-        public RecyclerTouchListener(Context context, final RecyclerView recyclerView, final ClickListener clickListener) {
-            this.clickListener = clickListener;
-            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public boolean onSingleTapUp(MotionEvent e) {
-                    return true;
-                }
-
-                @Override
-                public void onLongPress(MotionEvent e) {
-                    View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
-                    if (child != null && clickListener != null) {
-                        clickListener.onLongClick(child, recyclerView.getChildPosition(child));
-                    }
-                }
-            });
-        }
-
-        @Override
-        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-
-            View child = rv.findChildViewUnder(e.getX(), e.getY());
-            if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
-                clickListener.onClick(child, rv.getChildPosition(child));
-            }
-            return false;
-        }
-
-        @Override
-        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-        }
-
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-        }
-
-
-    }
-
     public interface FragmentDrawerListener {
         public void onDrawerItemSelected(View view, int position);
     }
-
-
-
 
 }
